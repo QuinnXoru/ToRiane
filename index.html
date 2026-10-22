@@ -3,23 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>I'm Sorry!</title>
+  <title>I'm Sorry! 💕</title>
+  
+  <!-- Buldak Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍜</text></svg>">
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Confetti JS -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   
   <style>
     :root {
       --pink-primary: #ff69b4;
       --pink-deep: #ff1493;
+      --pink-neon: #ff3399;
       --pink-soft: #ffb6c1;
       --pink-light: #fff0f5;
-      --pink-glow: rgba(255, 105, 180, 0.4);
-      --glass-bg: rgba(255, 255, 255, 0.75);
-      --glass-border: rgba(255, 182, 193, 0.6);
-      --text-dark: #8b0046;
+      
+      /* Modern Glassmorphism Variables */
+      --glass-bg: rgba(255, 255, 255, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.8);
+      --glass-shadow: 0 8px 32px 0 rgba(255, 105, 180, 0.25);
+      --text-dark: #7a003c;
     }
 
     * {
@@ -31,13 +40,78 @@
 
     body {
       font-family: 'Quicksand', sans-serif;
-      background: linear-gradient(135deg, #ffe4e1 0%, #ffc0cb 50%, #ffb6c1 100%);
+      /* Animated Background Gradient */
+      background: linear-gradient(-45deg, #ffe4e1, #ffc0cb, #ffb6c1, #ff99cc);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
       color: var(--text-dark);
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
     }
 
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* --- Loading Screen --- */
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--pink-light);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease;
+    }
+
+    .heart-loader {
+      width: 60px;
+      height: 60px;
+      background-color: var(--pink-deep);
+      transform: rotate(45deg);
+      animation: pulse 1s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+      position: relative;
+      box-shadow: 0 0 20px rgba(255, 20, 147, 0.6);
+    }
+
+    .heart-loader::before, .heart-loader::after {
+      content: "";
+      width: 60px;
+      height: 60px;
+      background-color: var(--pink-deep);
+      border-radius: 50%;
+      position: absolute;
+    }
+    .heart-loader::before { top: -30px; left: 0; }
+    .heart-loader::after { top: 0; left: -30px; }
+
+    .loader-text {
+      margin-top: 40px;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.5rem;
+      color: var(--pink-deep);
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: rotate(45deg) scale(0.8); }
+      50% { transform: rotate(45deg) scale(1.2); }
+      100% { transform: rotate(45deg) scale(0.8); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* --- Ambient Canvas --- */
     #particleCanvas {
       position: fixed;
       top: 0;
@@ -48,10 +122,11 @@
       z-index: 0;
     }
 
+    /* --- Main Layout --- */
     .container {
       max-width: 900px;
       margin: 0 auto;
-      padding: 2rem 1.5rem 5rem 1.5rem;
+      padding: 2rem 1.5rem 6rem 1.5rem;
       position: relative;
       z-index: 10;
       display: flex;
@@ -60,63 +135,100 @@
       gap: 2.5rem;
     }
 
-    header {
-      text-align: center;
+    /* --- Prominent Audio Widget --- */
+    .audio-widget {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
       background: var(--glass-bg);
       backdrop-filter: blur(12px);
-      border: 3px solid var(--glass-border);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      padding: 0.6rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      box-shadow: 0 8px 25px rgba(255, 105, 180, 0.3);
+      cursor: pointer;
+      z-index: 50;
+      transition: all 0.3s ease;
+    }
+
+    .audio-widget:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 12px 30px rgba(255, 105, 180, 0.5);
+    }
+
+    .audio-icon {
+      font-size: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .audio-text {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--pink-deep);
+    }
+
+    /* --- Glassmorphism UI --- */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
       border-radius: 30px;
-      padding: 2.5rem 2rem;
+      box-shadow: var(--glass-shadow);
       width: 100%;
-      box-shadow: 0 15px 35px var(--pink-glow);
-      animation: floatBanner 4s ease-in-out infinite alternate;
+    }
+
+    header {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      animation: floatBanner 5s ease-in-out infinite alternate;
     }
 
     @keyframes floatBanner {
-      0% { transform: translateY(0px) rotate(-0.5deg); }
-      100% { transform: translateY(-10px) rotate(0.5deg); }
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-12px); }
     }
 
     h1 {
       font-family: 'Pacifico', cursive;
-      font-size: 3.2rem;
+      font-size: 3.5rem;
       color: var(--pink-deep);
-      text-shadow: 3px 3px 0px #ffffff, 5px 5px 15px rgba(255, 20, 147, 0.3);
+      text-shadow: 2px 2px 0px #ffffff, 4px 4px 15px rgba(255, 20, 147, 0.4);
       margin-bottom: 0.5rem;
       line-height: 1.2;
     }
 
-    .subtitle {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 1.25rem;
-      color: #d81b60;
-      letter-spacing: 0.5px;
-    }
-
     .apology-card {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(10px);
-      border: 2px solid #ffb6c1;
-      border-radius: 25px;
-      padding: 2rem;
-      width: 100%;
-      box-shadow: 0 10px 30px rgba(255, 105, 180, 0.2);
+      padding: 2.5rem 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 1.5rem;
+      gap: 1.8rem;
     }
 
     .hero-img-container {
       position: relative;
       width: 100%;
       max-width: 320px;
-      border-radius: 20px;
+      border-radius: 25px;
       overflow: hidden;
-      border: 5px solid #fff;
-      box-shadow: 0 8px 25px rgba(255, 20, 147, 0.25);
+      border: 6px solid #fff;
+      box-shadow: 0 15px 35px rgba(255, 20, 147, 0.3);
       background-color: #ffffff;
+      transform: rotate(-2deg);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .hero-img-container:hover {
+      transform: rotate(2deg) scale(1.05);
     }
 
     .hero-img {
@@ -124,22 +236,19 @@
       height: 280px;
       object-fit: contain;
       display: block;
-      transition: transform 0.3s ease;
       padding: 10px;
     }
 
-    .hero-img-container:hover .hero-img {
-      transform: scale(1.05);
-    }
-
     .letter-text {
-      font-size: 1.15rem;
-      line-height: 1.7;
+      font-size: 1.2rem;
+      line-height: 1.8;
       color: #6a040f;
-      font-weight: 500;
+      font-weight: 600;
       max-width: 650px;
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
     }
 
+    /* --- Interactive Action Zone --- */
     .action-zone {
       display: flex;
       flex-direction: column;
@@ -153,8 +262,9 @@
 
     .question-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: 1.8rem;
-      color: var(--pink-deep);
+      font-size: 2rem;
+      color: var(--pink-neon);
+      text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
     }
 
     .btn-group {
@@ -169,13 +279,13 @@
 
     .btn {
       font-family: 'Fredoka', sans-serif;
-      font-size: 1.3rem;
-      padding: 0.8rem 2.2rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+      padding: 1rem 2.5rem;
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
@@ -183,73 +293,36 @@
     }
 
     .btn-yes {
-      background: linear-gradient(45deg, #ff1493, #ff69b4);
+      background: linear-gradient(135deg, #ff1493, #ff69b4);
       color: white;
-      border: 2px solid #fff;
-      box-shadow: 0 8px 25px rgba(255, 20, 147, 0.4);
+      border: 3px solid #fff;
+      box-shadow: 0 10px 30px rgba(255, 20, 147, 0.5);
       z-index: 5;
     }
 
     .btn-yes:hover {
       transform: scale(1.1) rotate(-2deg);
-      box-shadow: 0 12px 30px rgba(255, 20, 147, 0.6);
+      box-shadow: 0 15px 40px rgba(255, 20, 147, 0.7);
     }
 
     .btn-no {
-      background: #ffffff;
-      color: #ff1493;
-      border: 2px solid #ffb6c1;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--pink-deep);
+      border: 3px solid var(--pink-soft);
       position: relative;
-      transition: all 0.2s ease-out;
+      /* Smooth movement for dodging */
+      transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.2s;
       z-index: 4;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
 
+    /* --- Interactive Accordion --- */
     .gallery-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: var(--text-dark);
       margin-top: 1rem;
-      text-shadow: 1px 1px 0px #fff;
-    }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 2rem;
-      width: 100%;
-      max-width: 650px;
-    }
-
-    .gallery-card {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 20px;
-      padding: 1rem;
-      border: 2px solid #ffb6c1;
-      box-shadow: 0 8px 20px rgba(255, 105, 180, 0.15);
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.8rem;
-    }
-
-    .gallery-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 15px 30px rgba(255, 20, 147, 0.3);
-      border-color: var(--pink-deep);
-    }
-
-    .gallery-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 15px;
-    }
-
-    .gallery-caption {
-      font-family: 'Fredoka', sans-serif;
-      font-size: 1.2rem;
-      color: #d81b60;
+      text-shadow: 2px 2px 0px #fff;
       text-align: center;
     }
 
@@ -257,69 +330,128 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.2rem;
     }
 
     .reason-box {
-      background: rgba(255, 240, 245, 0.95);
-      border: 2px dashed #ff69b4;
-      border-radius: 18px;
-      padding: 1.2rem 1.5rem;
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 105, 180, 0.5);
+      border-radius: 20px;
+      padding: 1.5rem;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.1);
     }
 
     .reason-box:hover {
-      background: #ffffff;
-      transform: scale(1.01);
-      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.2);
+      background: rgba(255, 255, 255, 0.9);
+      transform: scale(1.02) translateX(5px);
+      box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
+      border-color: var(--pink-neon);
     }
 
     .reason-header {
       font-family: 'Fredoka', sans-serif;
-      font-size: 1.15rem;
+      font-size: 1.25rem;
+      font-weight: 600;
       color: var(--pink-deep);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
+    .reason-indicator {
+      transition: transform 0.3s;
+    }
+
+    .reason-box.active .reason-indicator {
+      transform: rotate(180deg);
+    }
+
     .reason-body {
-      font-size: 0.98rem;
-      color: #4a001f;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #5c0029;
       display: none;
-      padding-top: 0.5rem;
-      border-top: 1px rgba(255, 105, 180, 0.3) solid;
+      padding-top: 1rem;
+      border-top: 2px dashed rgba(255, 105, 180, 0.3);
+      line-height: 1.5;
     }
 
     .reason-box.active .reason-body {
       display: block;
-      animation: fadeIn 0.4s ease-in-out;
+      animation: slideDown 0.4s ease-out;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-5px); }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* --- Gallery Grid --- */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    .gallery-card {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 25px;
+      padding: 1.2rem;
+      border: 2px solid #fff;
+      box-shadow: 0 10px 25px rgba(255, 105, 180, 0.2);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .gallery-card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(255, 20, 147, 0.35);
+      border-color: var(--pink-neon);
+    }
+
+    .gallery-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 18px;
+    }
+
+    .gallery-caption {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--pink-deep);
+      text-align: center;
+    }
+
+    /* --- Celebration Modal --- */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(255, 105, 180, 0.5);
-      backdrop-filter: blur(8px);
+      background: rgba(255, 105, 180, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 100;
+      z-index: 1000;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.5s ease;
     }
 
     .modal-overlay.active {
@@ -328,96 +460,90 @@
     }
 
     .modal-content {
-      background: #ffffff;
-      border: 4px solid var(--pink-deep);
-      border-radius: 30px;
-      padding: 3rem 2rem;
-      max-width: 480px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 5px solid #fff;
+      border-radius: 35px;
+      padding: 3.5rem 2.5rem;
+      max-width: 500px;
       width: 90%;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(255, 20, 147, 0.5);
-      transform: scale(0.7);
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 30px 60px rgba(255, 20, 147, 0.6);
+      transform: scale(0.5) translateY(100px);
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1.5rem;
+      gap: 1.8rem;
     }
 
     .modal-overlay.active .modal-content {
-      transform: scale(1);
+      transform: scale(1) translateY(0);
     }
 
     .modal-title {
       font-family: 'Pacifico', cursive;
-      font-size: 2.8rem;
-      color: var(--pink-deep);
+      font-size: 3.2rem;
+      color: var(--pink-neon);
+      text-shadow: 2px 2px 0px rgba(255,182,193,0.5);
     }
 
     .modal-img {
-      width: 180px;
-      height: 180px;
+      width: 200px;
+      height: 200px;
       object-fit: contain;
       border-radius: 50%;
-      border: 4px solid #ffb6c1;
-      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+      border: 6px solid var(--pink-soft);
+      box-shadow: 0 10px 25px rgba(255, 105, 180, 0.4);
       background-color: #fff;
       padding: 10px;
     }
 
     .modal-text {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       color: var(--text-dark);
-      font-weight: 600;
+      font-weight: 700;
+      line-height: 1.5;
     }
 
-    .sound-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #ffffff;
-      border: 2px solid var(--pink-primary);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.4rem;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-      z-index: 50;
-      transition: transform 0.2s;
-    }
-
-    .sound-btn:hover {
-      transform: scale(1.1);
-    }
-
+    /* --- Responsive --- */
     @media (max-width: 600px) {
-      h1 { font-size: 2.4rem; }
-      .question-title { font-size: 1.4rem; }
-      .btn { font-size: 1.1rem; padding: 0.7rem 1.8rem; }
-      .btn-group { flex-direction: column; gap: 1rem; }
+      h1 { font-size: 2.6rem; }
+      .question-title { font-size: 1.6rem; }
+      .btn { font-size: 1.2rem; padding: 0.8rem 2rem; }
+      .btn-group { flex-direction: column; gap: 1.2rem; }
       .gallery-grid { grid-template-columns: 1fr; }
+      .audio-widget { bottom: 15px; right: 15px; padding: 0.5rem 1rem; }
+      .audio-text { display: none; } /* Hide text on small screens, keep icon */
     }
   </style>
 </head>
 <body>
 
+  <!-- Loading Screen -->
+  <div id="loader">
+    <div class="heart-loader"></div>
+    <div class="loader-text">Loading Love... 💕</div>
+  </div>
+
+  <!-- Ambient Background Particles -->
   <canvas id="particleCanvas"></canvas>
 
-  <button class="sound-btn" id="soundBtn" title="Toggle Sound Effects">🔔</button>
+  <!-- Improved Audio Widget -->
+  <div class="audio-widget" id="soundBtn" title="Toggle Synth Music">
+    <span class="audio-icon">🔔</span>
+    <span class="audio-text">Sound ON</span>
+  </div>
 
   <div class="container">
     
-    <header>
+    <header class="glass-panel">
       <h1>I'm Sorry</h1>
     </header>
 
-    <main class="apology-card">
+    <main class="glass-panel apology-card">
       <div class="hero-img-container">
-        <img class="hero-img" src="cat.png" alt="Apology Cat with Tulip">
+        <!-- Using the user's specific cat.png image name -->
+        <img class="hero-img" src="cat.png" onerror="this.src='https://i.ibb.co/68v8M4X/tulip-cat.jpg'" alt="Apology Cat with Tulip">
       </div>
       
       <p class="letter-text">
@@ -438,7 +564,7 @@
       <div class="reason-box">
         <div class="reason-header">
           <span>🌸 1. I Never Wanted to Hurt Your Feelings</span>
-          <span>▼</span>
+          <span class="reason-indicator">▼</span>
         </div>
         <div class="reason-body">
           Your happiness is my top priority. I feel terrible about what I made you feel, and I promise to listen, improve and communicate much better.
@@ -448,20 +574,20 @@
       <div class="reason-box">
         <div class="reason-header">
           <span>🌷 2. I promise to take care of myself</span>
-          <span>▼</span>
+          <span class="reason-indicator">▼</span>
         </div>
         <div class="reason-body">
-          I will take good care of myself, worrying you is never my intention
+          I will take good care of myself, worrying you is never my intention.
         </div>
       </div>
 
       <div class="reason-box">
         <div class="reason-header">
           <span>💖 3. I Promise to Make It Up To You</span>
-          <span>▼</span>
+          <span class="reason-indicator">▼</span>
         </div>
         <div class="reason-body">
-          I want to buy you your cravings, what you want me to do, I will listen and do my best to do so
+          I want to buy you your cravings, what you want me to do, I will listen and do my best to do so.
         </div>
       </div>
     </div>
@@ -469,34 +595,57 @@
     <h2 class="gallery-title">Pink Peace Offerings 🌸</h2>
     <section class="gallery-grid">
       <div class="gallery-card">
-        <img class="gallery-img" src="https://i.pinimg.com/originals/7b/39/93/7b39938a51b44a1a4325d982cd0f6477.jpg" alt="Kwek Kwek">
-        <p class="gallery-caption">Kwek-Kwek</p>
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=600&q=80" alt="Kwek Kwek">
+        <p class="gallery-caption">Crispy Hot Kwek-Kwek 🍢</p>
       </div>
 
       <div class="gallery-card">
-        <img class="gallery-img" src="https://cdn.buldak.roundsquare.io/uploads/2025/04/20250407_042318.webp" alt="Pink Buldak Noodles">
-        <p class="gallery-caption">Buldak</p>
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=600&q=80" alt="Pink Buldak Noodles">
+        <p class="gallery-caption">Spicy Creamy Pink Buldak 🍜💗</p>
       </div>
     </section>
 
   </div>
 
+  <!-- Celebration Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-content">
       <h2 class="modal-title">YAAAY! 🎉💗</h2>
-      <img class="modal-img" src="cat.png" alt="Pink Celebration Cat">
+      <img class="modal-img" src="cat.png" onerror="this.src='https://i.ibb.co/68v8M4X/tulip-cat.jpg'" alt="Pink Celebration Cat">
       <p class="modal-text">Thank you so much for forgiving me! You are the absolute best! 🌸✨💕</p>
       <button class="btn btn-yes" onclick="closeModal()">Close & Hug 🫂</button>
     </div>
   </div>
 
   <script>
+    /* --- Loading Screen Logic --- */
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const loader = document.getElementById('loader');
+        loader.style.opacity = '0';
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 600); // Wait for transition to finish
+      }, 1200); // Ensure the user sees the cute loader briefly
+    });
+
+    /* --- Audio Synthesizer Logic --- */
     let soundEnabled = true;
     const soundBtn = document.getElementById('soundBtn');
+    const audioIcon = soundBtn.querySelector('.audio-icon');
+    const audioText = soundBtn.querySelector('.audio-text');
 
     soundBtn.addEventListener('click', () => {
       soundEnabled = !soundEnabled;
-      soundBtn.textContent = soundEnabled ? '🔔' : '🔕';
+      if (soundEnabled) {
+        audioIcon.textContent = '🔔';
+        audioText.textContent = 'Sound ON';
+        soundBtn.style.background = 'rgba(255, 255, 255, 0.65)';
+      } else {
+        audioIcon.textContent = '🔕';
+        audioText.textContent = 'Muted';
+        soundBtn.style.background = 'rgba(255, 182, 193, 0.9)';
+      }
     });
 
     function playTone(freq, type = 'sine', duration = 0.2) {
@@ -514,9 +663,11 @@
         osc.start();
         osc.stop(audioCtx.currentTime + duration);
       } catch (e) {
+        // Handle browser autoplay policies gracefully
       }
     }
 
+    /* --- Particle Canvas Logic --- */
     const canvas = document.getElementById('particleCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -535,19 +686,23 @@
 
       reset() {
         this.x = Math.random() * canvas.width;
-        this.y = canvas.height + 20;
+        this.y = canvas.height + 20 + Math.random() * 100;
         this.size = Math.random() * 15 + 10;
         this.speedY = Math.random() * 1.5 + 0.8;
         this.speedX = Math.sin(Math.random() * Math.PI) * 0.8;
-        this.opacity = Math.random() * 0.6 + 0.3;
-        this.color = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffffff'][Math.floor(Math.random() * 4)];
+        this.opacity = Math.random() * 0.6 + 0.2;
+        this.color = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffffff', '#ff99cc'][Math.floor(Math.random() * 5)];
         this.type = Math.random() > 0.4 ? 'heart' : 'sparkle';
       }
 
       update() {
         this.y -= this.speedY;
         this.x += this.speedX;
-        if (this.y < -30) this.reset();
+        
+        // Swaying
+        this.x += Math.sin(this.y * 0.02) * 0.5;
+
+        if (this.y < -50) this.reset();
       }
 
       draw() {
@@ -569,13 +724,19 @@
           ctx.beginPath();
           ctx.arc(this.x, this.y, this.size / 4, 0, Math.PI * 2);
           ctx.fill();
+          // Adding a glow to sparkles
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = this.color;
         }
         ctx.restore();
       }
     }
 
-    for (let i = 0; i < 35; i++) {
-      particles.push(new Particle());
+    // Initialize particles
+    for (let i = 0; i < 40; i++) {
+      let p = new Particle();
+      p.y = Math.random() * canvas.height; // Distribute on screen initially
+      particles.push(p);
     }
 
     function animateParticles() {
@@ -588,10 +749,12 @@
     }
     animateParticles();
 
+    /* --- Interactive Dodging Button --- */
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
     let noAttempts = 0;
     let yesScale = 1;
+    let isNoBtnFixed = false;
 
     const noMessages = [
       "No 🥺",
@@ -606,21 +769,35 @@
       playTone(300, 'triangle', 0.15);
       noAttempts++;
 
+      // Change button text
       noBtn.textContent = noMessages[noAttempts % noMessages.length];
 
-      yesScale += 0.12;
+      // Grow the YES button to make forgiveness inevitable
+      yesScale += 0.15;
       yesBtn.style.transform = `scale(${yesScale})`;
 
-      const buttonWidth = noBtn.offsetWidth;
-      const buttonHeight = noBtn.offsetHeight;
-      
-      const maxX = window.innerWidth - buttonWidth - 40;
-      const maxY = window.innerHeight - buttonHeight - 40;
+      // Get dimensions
+      const btnRect = noBtn.getBoundingClientRect();
+      const maxX = window.innerWidth - btnRect.width - 20;
+      const maxY = window.innerHeight - btnRect.height - 20;
 
+      // Ensure button becomes absolute/fixed smoothly
+      if (!isNoBtnFixed) {
+        // Get current position relative to viewport before switching to fixed
+        const currentRect = noBtn.getBoundingClientRect();
+        noBtn.style.position = 'fixed';
+        noBtn.style.left = `${currentRect.left}px`;
+        noBtn.style.top = `${currentRect.top}px`;
+        isNoBtnFixed = true;
+        
+        
+        noBtn.offsetHeight; 
+      }
+
+      // Calculate new safe random coordinates
       const randomX = Math.max(20, Math.floor(Math.random() * maxX));
       const randomY = Math.max(20, Math.floor(Math.random() * maxY));
 
-      noBtn.style.position = 'fixed';
       noBtn.style.left = `${randomX}px`;
       noBtn.style.top = `${randomY}px`;
     }
@@ -628,35 +805,41 @@
     noBtn.addEventListener('mouseover', moveNoBtn);
     noBtn.addEventListener('click', moveNoBtn);
 
+    
     yesBtn.addEventListener('click', () => {
+      // Triumphant chord
       playTone(523.25, 'sine', 0.2);
       setTimeout(() => playTone(659.25, 'sine', 0.2), 150);
       setTimeout(() => playTone(783.99, 'sine', 0.3), 300);
+      setTimeout(() => playTone(1046.50, 'sine', 0.6), 450);
 
-      const end = Date.now() + (2.5 * 1000);
-      const colors = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffffff'];
+      
+      const duration = 3 * 1000;
+      const animationEnd = Date.now() + duration;
+      const colors = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffffff', '#ff3399'];
 
       (function frame() {
         confetti({
-          particleCount: 5,
+          particleCount: 8,
           angle: 60,
           spread: 55,
           origin: { x: 0 },
           colors: colors
         });
         confetti({
-          particleCount: 5,
+          particleCount: 8,
           angle: 120,
           spread: 55,
           origin: { x: 1 },
           colors: colors
         });
 
-        if (Date.now() < end) {
+        if (Date.now() < animationEnd) {
           requestAnimationFrame(frame);
         }
       }());
 
+     
       document.getElementById('modalOverlay').classList.add('active');
     });
 
@@ -664,9 +847,12 @@
       document.getElementById('modalOverlay').classList.remove('active');
     }
 
+    
     document.querySelectorAll('.reason-box').forEach(box => {
       box.addEventListener('click', () => {
         playTone(440, 'sine', 0.1);
+        
+        
         box.classList.toggle('active');
       });
     });
